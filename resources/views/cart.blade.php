@@ -14,6 +14,18 @@
 <body>
 <div class="container">
     <h2>Product</h2>
+    @if(session('message'))
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Success!</strong>{{session('message')}}
+        </div>
+    @endif
+    @if(session('remove'))
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Success!</strong>{{session('remove')}}
+        </div>
+    @endif
     <table class="table table-dark table-hover">
         <thead>
         <tr>
@@ -26,7 +38,15 @@
         </tr>
         </thead>
         <tbody>
+        <?php
+            $totalPrice=0
+        ?>
         @foreach($shoppingCart as $obj)
+            <?php
+                if (!empty($obj)){
+                    $totalPrice += $obj->unitPrice*$obj->quantity;
+                }
+            ?>
             <form action="/add" method="get">
                 <input type="hidden" name="cartAction" value="update">
                 <input type="hidden" name="productId" value="{{$obj->id}}">
@@ -47,6 +67,9 @@
         @endforeach
         </tbody>
     </table>
+    <div>
+        Total Price:{{$totalPrice}}
+    </div>
 </div>
 </body>
 </html>

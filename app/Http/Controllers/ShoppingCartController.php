@@ -21,6 +21,7 @@ class ShoppingCartController extends Controller
         }else{
             $shoppingCart = [];
         }
+        $message = 'Thêm sản phẩm vào giỏ hàng thành công!';
         $cartItem = null;
         if (!array_key_exists($productId, $shoppingCart)){
             $cartItem = new \stdClass();
@@ -33,14 +34,14 @@ class ShoppingCartController extends Controller
             $cartItem = $shoppingCart[$productId];
             if ($action != null && $action == 'update'){
                 $cartItem->quantity = $productQuantity;
+                $message = 'update sản phẩm thành công';
             }else{
                 $cartItem->quantity += $productQuantity;
             }
         }
         $shoppingCart[$productId] = $cartItem;
         Session::put('shoppingCart',$shoppingCart);
-        Session::flash('success-msg','Thêm sản phẩm vào giỏ hàng thành công!');
-        return redirect('show');
+        return redirect('show')->with('message',$message);
     }
     public function show(){
         $shoppingCart = Session::get('shoppingCart');
@@ -55,7 +56,7 @@ class ShoppingCartController extends Controller
             $shoppingCart=Session::get('shoppingCart');
             unset($shoppingCart[$productId]);
             Session::put('shoppingCart',$shoppingCart);
-            return redirect('show');
+            return redirect('show')->with('remove','delete thành công!');
         }
     }
 }
